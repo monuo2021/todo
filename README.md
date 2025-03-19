@@ -1,2 +1,2 @@
 # todo
-CLI APP
+A CLI APP
