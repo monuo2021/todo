@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var priority int
+
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add [任务名称]",
@@ -40,7 +42,9 @@ func addRun(cmd *cobra.Command, args []string) {
 
 	// 获取新添加的代办事项
 	for _, arg := range args {
-		items = append(items, include.Item{Text: arg})
+		item := include.Item{Text: arg}
+		item.SetPriority(priority)
+		items = append(items, item)
 	}
 
 	// 保存新的代办事项
@@ -52,6 +56,8 @@ func addRun(cmd *cobra.Command, args []string) {
 
 func init() {
 	rootCmd.AddCommand(addCmd)
+
+	addCmd.Flags().IntVarP(&priority, "priority", "p", 2, "优先级:1,2,3")
 
 	// Here you will define your flags and configuration settings.
 
