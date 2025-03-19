@@ -4,10 +4,14 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
+
+var dataFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -38,5 +42,22 @@ func init() {
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
+
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Println("Unable to detect home directory. Please set data file using --datafile.")
+	}
+
+	// 安全拼接路径
+	defaultPath := filepath.Join(home, ".todos.json")
+
+	// 配置Persistent Flags
+	rootCmd.PersistentFlags().StringVarP(
+		&dataFile,
+		"datafile",
+		"d",
+		defaultPath,
+		"存储待办事项的数据文件路径",
+	)
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

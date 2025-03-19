@@ -4,6 +4,9 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"log"
+	"os"
+
 	"github.com/monuo2021/todo/include"
 	"github.com/spf13/cobra"
 )
@@ -18,11 +21,30 @@ and usage of using your command.`,
 }
 
 func addRun(cmd *cobra.Command, args []string) {
-	items := []include.Item{}
+	var items []include.Item
+
+	// 检查文件是否存在
+	if _, err := os.Stat(dataFile); err == nil {
+		// 文件存在时加载已有的代办事项
+		items, err = include.LoadItems(dataFile)
+		if err != nil {
+			log.Printf("数据加载失败（已忽略加载操作）: %v", err)
+		}
+	} else if os.IsNotExist(err) {
+		// 文件不存在时初始化空列表
+		items = []include.Item{}
+	} else {
+		// 其他错误（如权限问题）
+		log.Fatalf("文件状态检查失败: %v", err)
+	}
+
+	// 获取新添加的代办事项
 	for _, arg := range args {
 		items = append(items, include.Item{Text: arg})
 	}
-	err := include.SaveItems("./todos.json", items)
+
+	// 保存新的代办事项
+	err := include.SaveItems(dataFile, items)
 	if err != nil {
 		panic(err)
 	}
