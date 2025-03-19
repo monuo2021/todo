@@ -10,6 +10,7 @@ type Item struct {
 	Text     string
 	Priority int
 	Position int
+	Done     bool
 }
 
 func SaveItems(filename string, items []Item) error {
@@ -62,6 +63,13 @@ func (i *Item) PrettyP() string {
 	return " "
 }
 
+func (i *Item) PrettyDone() string {
+	if i.Done {
+		return "x"
+	}
+	return ""
+}
+
 func (i *Item) Label() string {
 	return strconv.Itoa(i.Position) + "."
 }
@@ -77,8 +85,12 @@ func (s ByPri) Swap(i, j int) {
 }
 
 func (s ByPri) Less(i, j int) bool {
-	if s[i].Priority == s[j].Priority {
-		return s[i].Position < s[j].Position
+	if s[i].Done != s[j].Done {
+		return s[i].Done
 	}
-	return s[i].Priority < s[j].Priority
+
+	if s[i].Priority != s[j].Priority {
+		return s[i].Priority < s[j].Priority
+	}
+	return s[i].Position < s[j].Position
 }

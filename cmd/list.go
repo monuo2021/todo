@@ -14,6 +14,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	doneOpt bool
+	allOpt  bool
+)
+
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
@@ -46,9 +51,12 @@ func listRun(cmd *cobra.Command, args []string) {
 
 	// 遍历 items 切片中的每个待办事项
 	for _, item := range items {
-		line := item.Label() + "\t" + item.PrettyP() + "\t" + item.Text + "\t"
-		// 写入缓冲区（非立即输出）
-		fmt.Fprintln(w, line)
+		// allOpt 为 true 时，显示所有任务；allOpt 为 false 时，接下来判断 doneOpt
+		// doneOpt 为 true 时，只显示已完成的任务；doneOpt 为 false 时，显示未完成的任务
+		if allOpt || item.Done == doneOpt {
+			line := item.Label() + "\t" + item.PrettyDone() + "\t" + item.PrettyP() + "\t" + item.Text + "\t"
+			fmt.Fprintln(w, line)
+		}
 	}
 
 	// 应用格式规则并刷新输出到终端
@@ -57,6 +65,9 @@ func listRun(cmd *cobra.Command, args []string) {
 
 func init() {
 	rootCmd.AddCommand(listCmd)
+
+	listCmd.Flags().BoolVar(&doneOpt, "done", false, "Show 'Done' Todos")
+	listCmd.Flags().BoolVar(&allOpt, "all", false, "Show all Todos")
 
 	// Here you will define your flags and configuration settings.
 
