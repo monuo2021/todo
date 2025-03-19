@@ -12,9 +12,9 @@ import (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "todo",
-	Short: "todo 是一个待办事项的CLI APP",
+	Short: "Todo CLI应用，管理你的待办事项",
 	Long: `todo 将帮助你在更短的时间内完成更多的工作。
-它被设计得尽可能简单，以帮助你实现你的目标`,
+它被设计得尽可能简单，以帮助你实现你的目标。支持添加、列出、标记完成任务等功能。`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

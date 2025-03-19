@@ -4,16 +4,14 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/monuo2021/todo/include"
 	"github.com/spf13/cobra"
 )
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
-	Use:   "add",
-	Short: "A brief description of your command",
+	Use:   "add [任务名称]",
+	Short: "添加新任务",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command.`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -21,7 +19,10 @@ and usage of using your command.`,
 		for _, arg := range args {
 			items = append(items, include.Item{Text: arg})
 		}
-		fmt.Printf("%#v\n", items)
+		err := include.SaveItems("./todos.json", items)
+		if err != nil {
+			panic(err)
+		}
 	},
 }
 
