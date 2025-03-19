@@ -14,16 +14,18 @@ var addCmd = &cobra.Command{
 	Short: "添加新任务",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		items := []include.Item{}
-		for _, arg := range args {
-			items = append(items, include.Item{Text: arg})
-		}
-		err := include.SaveItems("./todos.json", items)
-		if err != nil {
-			panic(err)
-		}
-	},
+	Run: addRun,
+}
+
+func addRun(cmd *cobra.Command, args []string) {
+	items := []include.Item{}
+	for _, arg := range args {
+		items = append(items, include.Item{Text: arg})
+	}
+	err := include.SaveItems("./todos.json", items)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func init() {
