@@ -12,6 +12,7 @@ import (
 
 	"github.com/monuo2021/todo/include"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -32,8 +33,8 @@ func listRun(cmd *cobra.Command, args []string) {
 	var items []include.Item
 
 	// 检查文件是否存在
-	if _, err := os.Stat(dataFile); err == nil {
-		items, err = include.LoadItems(dataFile)
+	if _, err := os.Stat(viper.GetString("dataFile")); err == nil {
+		items, err = include.LoadItems(viper.GetString("dataFile"))
 		if err != nil {
 			log.Printf("error: %v\n", err)
 		}

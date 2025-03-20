@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var dataFile string
@@ -33,15 +34,29 @@ func Execute() {
 	}
 }
 
+var cfgFile string
+
+func initConfig() {
+	viper.SetConfigName(".todo")
+	viper.AddConfigPath("$HOME")
+	viper.AutomaticEnv()
+	viper.SetEnvPrefix("todo")
+
+	if err := viper.ReadInConfig(); err == nil {
+		log.Println("Use config file:", viper.ConfigFileUsed())
+	} else {
+		log.Println("No config file found. Using default settings.")
+	}
+}
+
 func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.todo.yaml)")
-
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
+	cobra.OnInitialize(initConfig)
 
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -60,4 +75,6 @@ func init() {
 		"存储待办事项的数据文件路径",
 	)
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.todo.yaml)")
 }

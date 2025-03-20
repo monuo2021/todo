@@ -11,6 +11,7 @@ import (
 
 	"github.com/monuo2021/todo/include"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // doneCmd represents the done command
@@ -22,7 +23,7 @@ var doneCmd = &cobra.Command{
 }
 
 func doneRun(cmd *cobra.Command, args []string) {
-	items, _ := include.LoadItems(dataFile)
+	items, _ := include.LoadItems(viper.GetString("dataFile"))
 	i, err := strconv.Atoi(args[0])
 
 	if err != nil {
@@ -34,7 +35,7 @@ func doneRun(cmd *cobra.Command, args []string) {
 		fmt.Printf("%q %v\n", items[i-1].Text, "marked done")
 
 		sort.Sort(include.ByPri(items))
-		include.SaveItems(dataFile, items)
+		include.SaveItems(viper.GetString("dataFile"), items)
 	} else {
 		log.Println(i, "doesn't match any items")
 	}

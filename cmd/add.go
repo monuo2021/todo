@@ -9,6 +9,7 @@ import (
 
 	"github.com/monuo2021/todo/include"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var priority int
@@ -26,9 +27,9 @@ func addRun(cmd *cobra.Command, args []string) {
 	var items []include.Item
 
 	// 检查文件是否存在
-	if _, err := os.Stat(dataFile); err == nil {
+	if _, err := os.Stat(viper.GetString("dataFile")); err == nil {
 		// 文件存在时加载已有的代办事项
-		items, err = include.LoadItems(dataFile)
+		items, err = include.LoadItems(viper.GetString("dataFile"))
 		if err != nil {
 			log.Printf("数据加载失败（已忽略加载操作）: %v", err)
 		}
@@ -48,7 +49,7 @@ func addRun(cmd *cobra.Command, args []string) {
 	}
 
 	// 保存新的代办事项
-	err := include.SaveItems(dataFile, items)
+	err := include.SaveItems(viper.GetString("dataFile"), items)
 	if err != nil {
 		panic(err)
 	}
